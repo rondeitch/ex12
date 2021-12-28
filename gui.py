@@ -5,9 +5,9 @@ import boggle_board_randomizer as randomizer
 class Gui:
     def __init__(self, board):
         self.__root = tk.Tk()
-        self.__dices = self.create_dices()
+        self.__dices = self.create_dices(board)
 
-    def create_dices(self):
+    def create_dices(self, board):
         board_buttons = []
         for r in range(len(board)):
             for c in range(len(board[0])):
@@ -32,3 +32,8 @@ class Gui:
 board = randomizer.randomize_board()
 gui = Gui(board)
 gui.main_loop()
+
+# root = tk.Tk()
+# cell = tk.Button(root, text="hi", font=("david", 30), width=10, height=10, bg="red", fg="white")
+# cell.pack(fill=tk.BOTH, expand=True)
+# root.mainloop()

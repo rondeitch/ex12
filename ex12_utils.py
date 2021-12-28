@@ -5,33 +5,40 @@ POSSIBLE_MOVES = {"u": (0, -1), "r": (1, 0), "d": (0, 1), "l": (-1, 0), "ur": (1
 
 
 def _is_valid_move(board, path, index):
-    x = path[index][0]
-    y = path[index][1]
-    if 0 <= x <= (len(board[0]) - 1) and 0 <= y <= (len(board) - 1):
+    """
+    Checks if the move is valid.
+    :param board: List[List[Any]]
+    :param path: List[Tuple[int, int]]
+    :param index: int
+    :return: bool
+    """
+    if is_valid_cell(board, path[index]):
         if index == 0:
             return True
-        elif index > 0 and \
-                (path[index - 1][0] - path[index][0], path[index - 1][1] - path[index][1]) in POSSIBLE_MOVES.values():
-            return True
+        elif index > 0:
+            if path[index] in path[:index] or (
+                    path[index - 1][0] - path[index][0],
+                    path[index - 1][1] - path[index][1]) in POSSIBLE_MOVES.values():
+                return True
     return False
 
 
 def is_valid_path(board, path, words):
+    """
+    Checks if the path is valid.
+    :param board:  List[List[Any]]
+    :param path:  List[Tuple[int, int]]
+    :param words: List[str]
+    :return: Optional[str]
+    """
     word = ''
     for i, cord in enumerate(path):
-        if i > 0:
-            if cord in path[:i] or not _is_valid_move(board, path, i):
-                return None
-            else:
-                word += str(board[cord[1]][cord[0]])
-        elif not _is_valid_move(board, path, i):
+        if not _is_valid_move(board, path, i):
             return None
-        else:
-            word += str(board[cord[1]][cord[0]])
+        word += str(board[cord[1]][cord[0]])
     if word in words:
         return word
-    else:
-        return None
+    return None
 
 
 def is_valid_sub_word(sub_word, word):
@@ -83,15 +90,24 @@ def find_paths_to_word(board, word):
 
 def find_length_n_paths(n, board, words):
     all_paths = []
+
+
+def find_length_n_words(n, board, words):
+    all_paths = []
     for word in words:
         if len(word) == n:
             all_paths += find_paths_to_word(board, word)
     return all_paths
 
 
-def find_length_n_words(n, board, words):
-    pass
-
-
 def max_score_paths(board, words):
     pass
+
+
+brd = [
+    ["h", "e", "qu", "e"],
+    ["e", "e", "t", "a"],
+    ["l", "l", "n", "o"],
+    ["o", "t", "x", "l"]
+]
+find_length_n_words(1, brd, ["a"])
