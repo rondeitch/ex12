@@ -144,3 +144,13 @@ def test_find_length_n_words():
     test_find_length_n_words_empty_board()
     test_find_length_n_words_one_item()
     test_find_length_n_words_two_items()
+
+
+def test_max_score_paths():
+    brd = [
+        ["q", "e", "qu", "a"],
+        ["u", "e", "t", "a"],
+        ["l", "l", "n", "o"],
+        ["o", "t", "x", "l"]
+    ]
+    assert max_score_paths(brd, ['queen']) == [[(0, 0), (0, 1), (1, 0), (1, 1), (2, 2)]]

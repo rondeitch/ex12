@@ -108,4 +108,13 @@ def find_length_n_words(n, board, words):
 
 
 def max_score_paths(board, words):
-    pass
+    all_paths = []
+    for word in words:
+        paths_for_word = find_paths_to_word(board, word)
+        if paths_for_word != []:
+            max_len = max([len(path) for path in paths_for_word])
+            for path in paths_for_word:
+                if len(path) == max_len:
+                    all_paths.append(path)
+                    break
+    return all_paths
