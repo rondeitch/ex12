@@ -10,7 +10,6 @@ def test_is_valid_path():
         ["l", "l", "n", "o"],
         ["o", "t", "x", "l"]
     ]
-
     assert is_valid_path(brd, words_cord_dict["hello"], words1) == "hello"
     assert is_valid_path(brd, words_cord_dict["queen"], words1) == "queen"
     assert is_valid_path(brd, [(-1, 3)], words1) is None
@@ -66,9 +65,11 @@ def test_find_length_n_paths_2x2():
     # n = 3
     assert find_length_n_paths(3, brd, ["abc", "dac", "bc", "da"]) == [[(0, 0), (1, 0), (0, 1)],
                                                                        [(1, 1), (0, 0), (0, 1)]]
-    brd = [["a", "a"], ["a", "a"]]
+    brd = [["a", "a"],
+           ["a", "a"]]
     assert len(find_length_n_paths(1, brd, "a")) == 4
-    assert len(find_length_n_paths(2, brd, "aa")) == 12
+    assert len(find_length_n_paths(2, brd, ["aa"])) == 12
+    # assert len(find_length_n_paths(3, brd, ["aaa"])) == 24
 
 
 def test_find_length_n_paths():
