@@ -1,4 +1,5 @@
 from ex12_utils import *
+import tests_helper as ts
 
 
 def test_is_valid_path():
@@ -15,6 +16,73 @@ def test_is_valid_path():
     assert is_valid_path(brd, [(-1, 3)], words1) is None
     assert is_valid_path(brd, [(5, 3)], words1) is None
     assert is_valid_path(brd, [(3, 3), (4, 3)], words1) is None
+
+
+def test_find_length_n_paths_2_len_char():
+    brd = [
+        ["h", "e", "qu", "e"],
+        ["e", "e", "t", "a"],
+        ["l", "l", "n", "o"],
+        ["o", "t", "x", "l"]
+    ]
+    assert ts.compare_lists(find_length_n_paths(3, brd, ['quee', 'a', 'que']),
+                            [[(2, 0), (1, 0), (1, 1)], [(2, 0), (1, 0), (0, 1)], [(2, 0), (1, 1), (1, 0)],
+                             [(2, 0), (1, 1), (0, 1)]])
+    assert ts.compare_lists(find_length_n_paths(5, brd, ['eaolx', 'eaolo']), [[(3, 0), (3, 1), (3, 2), (3, 3), (2, 3)]])
+    assert ts.compare_lists(find_length_n_paths(4, brd, ['quanl', 'queta', 'eaolx', 'eaolo', 'hee']),
+                            [[(2, 0), (3, 1), (2, 2), (3, 3)], [(2, 0), (3, 1), (2, 2), (1, 2)],
+                             [(2, 0), (3, 0), (2, 1), (3, 1)], [(2, 0), (1, 0), (2, 1), (3, 1)],
+                             [(2, 0), (1, 1), (2, 1), (3, 1)]])
+
+
+def test_find_length_n_paths_1x1():
+    brd = [['a']]
+    assert find_length_n_paths(2, brd, ['a']) == []
+    assert find_length_n_paths(1, brd, ['a', 'asd', 'cvxz']) == [[(0, 0)]]
+    assert find_length_n_paths(1, brd, ['a']) == [[(0, 0)]]
+    assert find_length_n_paths(1, brd, ['b']) == []
+    assert find_length_n_paths(0, brd, ['a']) == []
+    assert find_length_n_paths(-1, brd, ['a']) == []
+    brd = [['bc']]
+    assert find_length_n_paths(1, brd, ['bc']) == [[(0, 0)]]
+    assert find_length_n_paths(1, brd, ['a']) == []
+    brd = [['bc', 'a', 'b', 'c']]
+    assert find_length_n_paths(1, brd, ['bc']) == [[(0, 0)]]
+    assert find_length_n_paths(2, brd, ['bc']) == [[(2, 0), (3, 0)]]
+
+
+def test_find_length_n_paths_empty_board():
+    brd = []
+    assert find_length_n_paths(1, brd, ["a"]) == []
+    assert find_length_n_paths(0, brd, ["a"]) == []
+    assert find_length_n_paths(0, brd, []) == []
+    brd = [[]]
+    assert find_length_n_paths(1, brd, ["a"]) == []
+    brd = [[], []]
+    assert find_length_n_paths(1, brd, ["a"]) == []
+    assert find_length_n_paths(0, brd, ["a"]) == []
+    assert find_length_n_paths(0, brd, []) == []
+
+
+def test_find_length_n_paths_long_char():
+    brd = [
+        ["h", "aaaaa", "qu", "e"],
+        ["e", "e", "t", "abc"],
+        ["l", "l", "abcde", "o"],
+        ["o", "t", "x", "abcd"]
+    ]
+    assert ts.compare_lists(find_length_n_paths(1, brd, ['aaaaa', 'eaolo']), [[(1, 0)]])
+    assert ts.compare_lists(find_length_n_paths(2, brd, ['aaaaaqu', 'eaolo']), [[(1, 0), (2, 0)]])
+    assert ts.compare_lists(find_length_n_paths(3, brd, ['aaaaaquabc', 'eaolo']), [[(1, 0), (2, 0), (3, 1)]])
+    assert ts.compare_lists(find_length_n_paths(2, brd, ['aaaaaquabc', 'eaolo']), [])
+    assert ts.compare_lists(find_length_n_paths(10, brd, ['aaaaaquabc', 'eaolo']), [])
+    assert ts.compare_lists(find_length_n_paths(1, brd, ['abcd', 'abcde']), [[(3, 3)], [(2, 2)]])
+
+
+def test_find_length_n_paths():
+    test_find_length_n_paths_2_len_char()
+    test_find_length_n_paths_1x1()
+    test_find_length_n_paths_empty_board()
 
 
 def test_find_length_n_words_empty_board():

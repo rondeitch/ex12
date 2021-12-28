@@ -61,9 +61,13 @@ def is_valid_cell(board, cord):
     return False
 
 
-def _all_paths_to_word_helper(board, word, all_paths, path, sub_word):
+def _all_paths_to_word_helper(board, word, all_paths, path, sub_word, n, find_len_n_paths):
+    if find_len_n_paths and len(path) > n:
+        return
     if is_valid_sub_word(sub_word, word):
         if len(sub_word) == len(word):
+            if find_len_n_paths and len(path) != n:
+                return
             all_paths.append(path)
             return
     elif len(sub_word) > len(word):
@@ -76,20 +80,23 @@ def _all_paths_to_word_helper(board, word, all_paths, path, sub_word):
             new_path = copy.deepcopy(path)
             new_path.append(new_cord)
             new_sub_word = sub_word + board[new_cord[1]][new_cord[0]]
-            _all_paths_to_word_helper(board, word, all_paths, new_path, new_sub_word)
+            _all_paths_to_word_helper(board, word, all_paths, new_path, new_sub_word, n, find_len_n_paths)
 
 
-def find_paths_to_word(board, word):
+def find_paths_to_word(board, word, n=0, find_len_n_paths=False):
     all_paths = []
     for y in range(len(board)):
         for x in range(len(board[0])):
             cord = (x, y)
-            _all_paths_to_word_helper(board, word, all_paths, [cord], board[cord[1]][cord[0]])
+            _all_paths_to_word_helper(board, word, all_paths, [cord], board[cord[1]][cord[0]], n, find_len_n_paths)
     return all_paths
 
 
 def find_length_n_paths(n, board, words):
     all_paths = []
+    for word in words:
+        all_paths += find_paths_to_word(board, word, n, True)
+    return all_paths
 
 
 def find_length_n_words(n, board, words):
@@ -102,12 +109,3 @@ def find_length_n_words(n, board, words):
 
 def max_score_paths(board, words):
     pass
-
-
-brd = [
-    ["h", "e", "qu", "e"],
-    ["e", "e", "t", "a"],
-    ["l", "l", "n", "o"],
-    ["o", "t", "x", "l"]
-]
-find_length_n_words(1, brd, ["a"])
