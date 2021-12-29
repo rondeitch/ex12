@@ -21,6 +21,7 @@ class Gui:
         # pack all together #
         self.__clock_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.__buttons_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        # TODO: makes the dices also expandable.
 
     def creat_clock(self, minute, second):
         """
