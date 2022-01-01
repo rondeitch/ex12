@@ -1,7 +1,9 @@
 import copy
 
+
 POSSIBLE_MOVES = {"u": (0, -1), "r": (1, 0), "d": (0, 1), "l": (-1, 0), "ur": (1, -1), "dr": (1, 1), "dl": (-1, 1),
                   "ul": (-1, -1)}
+SEARCH_WORD, SEARCH_PATH = True, False
 
 
 def _is_valid_move(board, path, index):
@@ -53,7 +55,7 @@ def _is_valid_sub_word(sub_word, word):
     return False
 
 
-def _path_to_str(board, path):
+def path_to_str(board, path):
     """
     Return the path to the word from the content of the cells.
     :param board: List[List[str]]
@@ -79,100 +81,66 @@ def _is_valid_cell(board, cord):
     return False
 
 
-def _find_all_paths_helper(board, word, all_paths, path, sub_word, n, find_len_n_paths):
-    """
-    Helper for find_all_paths. Find all the paths for the given word.
-    :param board: List[List[str]]
-    :param word: List[List[Tuple[int, int]]]
-    :param all_paths: List[Tuple[int, int]]
-    :param path: List[Tuple[int, int]]
-    :param sub_word: str
-    :param n: int
-    :param find_len_n_paths: bool
-    :return: None, but append paths to the all_paths list.
-    """
-    if find_len_n_paths and len(path) > n:
-        return
-    if _is_valid_sub_word(sub_word, word):
-        if len(sub_word) == len(word):
-            if find_len_n_paths and len(path) != n:
-                return
-            all_paths.append(path)
-            return
-    elif len(sub_word) > len(word):
-        return
-    prev_cord = path[-1]
-    for direction in POSSIBLE_MOVES.values():
-        new_cord = prev_cord[0] + direction[0], prev_cord[1] + direction[1]
-        # Check if cell in board and if new cord is not in path:
-        if _is_valid_cell(board, new_cord) and new_cord not in path:
-            new_path = copy.deepcopy(path)
-            new_path.append(new_cord)
-            new_sub_word = sub_word + board[new_cord[0]][new_cord[1]]
-            _find_all_paths_helper(board, word, all_paths, new_path, new_sub_word, n, find_len_n_paths)
+def _is_path_reached_limit(limit, search_type, path, sub_word):
+    search_by_word = search_type is SEARCH_WORD and len(sub_word) >= limit
+    search_by_path = search_type is SEARCH_PATH and len(path) >= limit
+    if search_by_path or search_by_word:
+        return True
+    return False
 
 
-def _find_all_paths(board, word, n=0, find_len_n_paths=False):
+def _find_all_paths_helper(limit, search_type, board, words, all_paths, path, sub_word):
     """
-    Find all the paths for the given word.
+    :param limit: when search_type is SEARCH_WORD this is the number of letters, when search_type is SEARCH_PATH this
+    the number of cells
+    :param search_type: SEARCH_WORD or SEARCH_PATH
     :param board: List[List[str]]
-    :param word: str
-    :param n: int, default is 0 (made for find_length_n_paths).
-    :param find_len_n_paths: bool, default is False (made for find_length_n_paths).
-    :return: List[List[Tuple[int, int]]]
+    :param words: Dict[str] - contains all words
+    :param all_paths: List[Tuple[int,int]]
+    :param path: current path
+    :param sub_word: the word corresponding the the path
+    :return: None
     """
+    # if reached limit by word or path length (depends on search type):
+    if _is_path_reached_limit(limit, search_type, path, sub_word):
+        if sub_word in words:
+            all_paths.append(copy.deepcopy(path))
+        return
+    for direction in POSSIBLE_MOVES.values():  # iterate all directions
+        new_cord = path[-1][0] + direction[0], path[-1][1] + direction[1]
+        if _is_valid_cell(board, new_cord) and new_cord not in path:  # check if new_cord is not in path and is in board
+            prev_word = sub_word
+            sub_word += board[new_cord[0]][new_cord[1]]  # add new_letter to sub_word
+            path.append(new_cord)  # add new_cord to path
+            _find_all_paths_helper(limit, search_type, board, words, all_paths, path, sub_word)
+            sub_word = prev_word  # return to prev word
+            path.pop()  # remove new_cord from path
+
+
+def find_length_n_words(n, board, words):
     all_paths = []
-    for x in range(len(board)):
-        for y in range(len(board[0])):
-            cord = (x, y)
-            _find_all_paths_helper(board, word, all_paths, [cord], board[cord[0]][cord[1]], n, find_len_n_paths)
+    word_dict = dict()  # create a dictionary from words list
+    for word in words:
+        if len(word) == n:  # filter dict with n length words
+            word_dict[word] = 0
+    # iterate all cells in board
+    for r in range(len(board)):
+        for c in range(len(board[r])):
+            _find_all_paths_helper(n, SEARCH_WORD, board, word_dict, all_paths, [(r, c)], board[r][c])
     return all_paths
 
 
 def find_length_n_paths(n, board, words):
-    """
-    Find paths that are in n length for the words in words arg.
-    :param n: int
-    :param board: List[List[str]]
-    :param words: iterable[str]
-    :return: List[List[Tuple[int, int]]] or empty list
-    """
     all_paths = []
+    word_dict = dict()  # create a dictionary from words list
     for word in words:
-        all_paths += _find_all_paths(board, word, n, True)
+        word_dict[word] = 0
+    # iterate all cells in board
+    for r in range(len(board)):
+        for c in range(len(board[r])):
+            _find_all_paths_helper(n, SEARCH_PATH, board, word_dict, all_paths, [(r, c)], board[r][c])
     return all_paths
 
 
-def find_length_n_words(n, board, words):
-    """
-    Find paths for words in n length from the words arg.
-    :param n: int
-    :param board: List[List[str]]
-    :param words: iterable[str]
-    :return: List[List[Tuple[int, int]]] or empty list
-    """
-    all_paths = []
-    for word in words:
-        if len(word) == n:
-            all_paths += _find_all_paths(board, word)
-    return all_paths
-
-
-def max_score_paths(board, words):  # TODO: check if its exact how they asked for.
-    """
-    Return a list of paths that give the max score for the board and words given as input. There is just one path for
-    each word (the longest path).
-    :param board: List[List[str]]
-    :param words: iterable[str]
-    :return: List[List[Tuple[int, int]]] or empty list
-    """
-    all_paths = []
-    for word in words:
-        paths_for_word = _find_all_paths(board, word)
-        if paths_for_word != []:
-            max_len = max([len(path) for path in paths_for_word])
-            for path in paths_for_word:
-                if len(path) == max_len:
-                    all_paths.append(path)
-                    break
-    return all_paths
+def max_score_paths(board, words):
+    pass
