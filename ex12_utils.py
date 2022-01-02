@@ -1,6 +1,5 @@
 import copy
 
-
 POSSIBLE_MOVES = {"u": (0, -1), "r": (1, 0), "d": (0, 1), "l": (-1, 0), "ur": (1, -1), "dr": (1, 1), "dl": (-1, 1),
                   "ul": (-1, -1)}
 SEARCH_WORD, SEARCH_PATH = True, False
@@ -147,7 +146,6 @@ def find_length_n_paths(n, board, words):
         for c in range(len(board[r])):
             _find_all_paths_helper(n, SEARCH_PATH, board, word_dict, all_paths, [(r, c)], board[r][c])
     return all_paths
-
 
 
 def max_score_paths(board, words):
