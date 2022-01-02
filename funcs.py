@@ -1,47 +1,20 @@
 import copy
+import timeit
 
+import boggle_board_randomizer
+import collections
 
-POSSIBLE_MOVES = {"u": (0, -1), "r": (1, 0), "d": (0, 1), "l": (-1, 0), "ur": (1, -1), "dr": (1, 1), "dl": (-1, 1),
-                  "ul": (-1, -1)}
+POSSIBLE_MOVES = {"u": (-1, 0), "r": (0, 1), "d": (1, 0), "l": (0, -1), "ur": (-1, 1), "dr": (1, 1), "dl": (1, -1),
+                  "ul": (-1, 1)}
 SEARCH_WORD, SEARCH_PATH = True, False
 
 
-def _is_valid_move(board, path, index):
-    """
-    Checks if the move is valid.
-    :param board: List[List[Any]]
-    :param path: List[Tuple[int, int]]
-    :param index: int
-    :return: bool
-    """
-    if _is_valid_cell(board, path[index]):
-        if index == 0:
-            return True
-        elif index > 0:
-            if path[index] in path[:index] or (
-                    path[index - 1][0] - path[index][0],
-                    path[index - 1][1] - path[index][1]) in POSSIBLE_MOVES.values():
-                return True
-    return False
-
-
-def is_valid_path(board, path, words):
-    """
-    Checks if the path is valid, and if the word that suites it is in words.
-    :param board:  List[List[Any]]
-    :param path:  List[Tuple[int, int]]
-    :param words: List[str]
-    :return: Optional[str]
-    """
-    word = ''
-    for i, cord in enumerate(path):
-        if not _is_valid_move(board, path, i):
-            return None
-        word += str(board[cord[0]][cord[1]])
-    print(word, "is_valid_path()")
-    if word in words:
-        return word
-    return None
+def create_words_dict():
+    word_dict = []
+    with open("boggle_dict.txt", "r") as file:
+        for line in file:
+            word_dict.append(line.strip())
+    return word_dict
 
 
 def _is_valid_sub_word(sub_word, word):
@@ -76,8 +49,8 @@ def _is_valid_cell(board, cord):
     :param cord: Tuple[int, int]
     :return: bool
     """
-    y, x = cord
-    if 0 <= y < len(board) and 0 <= x < len(board[0]):
+    x, y = cord
+    if 0 <= x < len(board) and 0 <= y < len(board[0]):
         return True
     return False
 
@@ -91,17 +64,6 @@ def _is_path_reached_limit(limit, search_type, path, sub_word):
 
 
 def _find_all_paths_helper(limit, search_type, board, words, all_paths, path, sub_word):
-    """
-    :param limit: when search_type is SEARCH_WORD this is the number of letters, when search_type is SEARCH_PATH this
-    the number of cells
-    :param search_type: SEARCH_WORD or SEARCH_PATH
-    :param board: List[List[str]]
-    :param words: Dict[str] - contains all words
-    :param all_paths: List[Tuple[int,int]]
-    :param path: current path
-    :param sub_word: the word corresponding the the path
-    :return: None
-    """
     # if reached limit by word or path length (depends on search type):
     if _is_path_reached_limit(limit, search_type, path, sub_word):
         if sub_word in words:
@@ -110,24 +72,20 @@ def _find_all_paths_helper(limit, search_type, board, words, all_paths, path, su
     for direction in POSSIBLE_MOVES.values():  # iterate all directions
         new_cord = path[-1][0] + direction[0], path[-1][1] + direction[1]
         if _is_valid_cell(board, new_cord) and new_cord not in path:  # check if new_cord is not in path and is in board
-            # Make changes
             prev_word = sub_word
             sub_word += board[new_cord[0]][new_cord[1]]  # add new_letter to sub_word
             path.append(new_cord)  # add new_cord to path
             _find_all_paths_helper(limit, search_type, board, words, all_paths, path, sub_word)
-            # Reverse changes
             sub_word = prev_word  # return to prev word
             path.pop()  # remove new_cord from path
 
 
 def find_length_n_words(n, board, words):
-    if n <= 0:
-        return []
     all_paths = []
     word_dict = dict()  # create a dictionary from words list
     for word in words:
         if len(word) == n:  # filter dict with n length words
-            word_dict[word] = None
+            word_dict[word] = 0
     # iterate all cells in board
     for r in range(len(board)):
         for c in range(len(board[r])):
@@ -136,12 +94,10 @@ def find_length_n_words(n, board, words):
 
 
 def find_length_n_paths(n, board, words):
-    if n <= 0:
-        return []
     all_paths = []
     word_dict = dict()  # create a dictionary from words list
     for word in words:
-        word_dict[word] = None
+        word_dict[word] = 0
     # iterate all cells in board
     for r in range(len(board)):
         for c in range(len(board[r])):
@@ -149,6 +105,19 @@ def find_length_n_paths(n, board, words):
     return all_paths
 
 
-
 def max_score_paths(board, words):
-    pass
+    max_length = len(max(words, key=len))
+    max_score = 0
+    for n in range(max_length + 1, max_length // 2, -1):
+        print(n)
+
+
+brd = boggle_board_randomizer.randomize_board()
+boggle_dict = create_words_dict()
+max_score_paths(brd, boggle_dict)
+# print(brd)
+# w_paths = find_length_n_paths(5, brd, boggle_dict)
+#
+# for p in w_paths:
+#     print(path_to_str(brd, p), end=" ")
+# print()

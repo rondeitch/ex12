@@ -17,13 +17,13 @@ class Gui:
         self.__clock_frame = tk.Frame(self.__root)
         self.__time_minute = time // 60
         self.__time_second = time % 60
-        self.__clock = self.creat_clock(self.__time_minute, self.__time_second)
+        self.__clock = self.create_clock(self.__time_minute, self.__time_second)
         # pack all together #
         self.__clock_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.__buttons_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
         # TODO: makes the dices also expandable.
 
-    def creat_clock(self, minute, second):
+    def create_clock(self, minute, second):
         """
         Creat a clock for the game.
         :param minute: int
