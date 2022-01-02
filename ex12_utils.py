@@ -37,7 +37,7 @@ def is_valid_path(board, path, words):
         if not _is_valid_move(board, path, i):
             return None
         word += str(board[cord[0]][cord[1]])
-    print(word, "is_valid_path()")
+    # print(word, "is_valid_path()")
     if word in words:
         return word
     return None

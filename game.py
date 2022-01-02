@@ -2,10 +2,11 @@
 # 1. is board size is 4x4
 # 2. if cell content is only string "A-Z" + "QU"
 # 3. if game time is always 3 minutes
-
+import random
 
 import boggle_board_randomizer as randomizer
 import ex12_utils as utils
+from random import choice
 
 
 class BoggleGame:
@@ -14,6 +15,9 @@ class BoggleGame:
     GAME_MINS = 3
     POSSIBLE_MOVES = {"u": (0, -1), "r": (1, 0), "d": (0, 1), "l": (-1, 0), "ur": (1, -1), "dr": (1, 1), "dl": (-1, 1),
                       "ul": (-1, -1)}
+    # TODO: add here more comments (SUCCESS_TO_FIND_LIST)
+    SUCCESS_TO_FIND_LIST = ['Good Job!', 'You On Fire :)', 'Keep Going!', 'You Are The Best!!!', 'Well Done :)',
+                            'Keep Like This :) :) :)']
 
     def __init__(self):
         # TODO : Check if board is valid for game rules:
@@ -26,8 +30,9 @@ class BoggleGame:
         # Cross-game attributes:
         self.__game_state = False  # True if in middle of a game, False otherwise
         self.__games_played = 0
-        self.__word_dict = self.create_words_dict()  # TODO : SWITCH TO THIS
+        self.__word_list = self.create_words_list()  # TODO : SWITCH TO THIS
         # self.__word_dict = ["queen", "hello", "note", "let", "hen", "eel", "tell"]
+        # self.__word_dict = ["QUEEN", "HELLO", "NOTE", "LET", "HEN", "EEL", "TELL", "AALS"]
 
     @property
     def score(self):
@@ -67,23 +72,28 @@ class BoggleGame:
         return False
 
     @staticmethod
-    def create_words_dict():
-        word_dict = []
+    def create_words_list():
+        word_list = []
         with open(BoggleGame.WORD_DICT_PATH, "r") as file:
-            for _ in file:
-                word_dict.append(file.readline().strip())
-        return word_dict
+            for word in file:
+                word_list.append(word.strip())
+        return word_list
 
     def run_single_turn(self, path):
         print("You guessed:", utils.path_to_str(self.board, path))
-        print(path, utils.is_valid_path(self.board, path, self.__word_dict))
-        if utils.is_valid_path(self.board, path, self.__word_dict):
+        print(path, utils.is_valid_path(self.board, path, self.__word_list))
+        if utils.is_valid_path(self.board, path, self.__word_list):
             if not self.is_word_guessed(utils.path_to_str(self.board, path)):  # Check if word not already guessed
                 self.add_guess(utils.path_to_str(self.board, path))  # Add guess to score
                 self.reward_score(path)
+                # return random.choice(self.SUCCESS_TO_FIND_LIST)
+                print(random.choice(self.SUCCESS_TO_FIND_LIST))
+                # TODO: change to the returns instead the prints in all this function
             else:
+                # return "Word already guessed"
                 print("Word already guessed")
         else:
+            # return "Path not valid"
             print("Path not valid", )
         print(self.print_state())
 
@@ -93,8 +103,8 @@ class BoggleGame:
         brd = [
             ["H", "E", "QU", "E"],
             ["E", "E", "T", "A"],
-            ["L", "L", "N", "O"],
-            ["O", "T", "X", "L"]
+            ["L", "L", "N", "A"],
+            ["O", "T", "S", "L"]
         ]
         self.__board = brd
         # self.create_marked_board()
