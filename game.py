@@ -26,7 +26,7 @@ class BoggleGame:
         # Cross-game attributes:
         self.__game_state = False  # True if in middle of a game, False otherwise
         self.__games_played = 0
-        self.__word_dict = self.create_words_dict() # TODO : SWITCH TO THIS
+        self.__word_dict = self.create_words_dict()  # TODO : SWITCH TO THIS
         # self.__word_dict = ["queen", "hello", "note", "let", "hen", "eel", "tell"]
 
     @property

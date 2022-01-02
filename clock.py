@@ -4,11 +4,11 @@ from gui_style import *
 
 class Clock:
 
-    def __init__(self, root, time, callback, **kwargs):
+    def __init__(self, parent, time, callback, **kwargs):
         # callback #
         self.__callback = callback  # input function.
         # clock #
-        self.__clock_frame = tk.Frame(root)
+        self.__clock_frame = tk.Frame(parent)  # TODO: check if need to add **kwargs as param.
         self.__time = time  # time of the game.
         self.__time_minute = time // 60  # minute that left.
         self.__time_second = time % 60  # seconds left for specific minutes.
@@ -16,7 +16,7 @@ class Clock:
         # time_label #
         self.__time_label = self.create_time_label()  # label of 'Time: '
         # packing clock #
-        self.__clock_frame.pack(**kwargs)  # packing the clock
+        self.__clock_frame.pack(**kwargs)  # Packing the clock. Gets the **kwargs as params.
 
     def create_time_label(self):
         """
