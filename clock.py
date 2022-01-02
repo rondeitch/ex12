@@ -1,13 +1,10 @@
 import tkinter as tk
-
-import boggle_screen
 from gui_style import *
-from boggle_screen import *
 
 
 class Clock:
 
-    def __init__(self, root, time, callback):
+    def __init__(self, root, time, callback, **kwargs):
         # callback #
         self.__callback = callback  # input function.
         # clock #
@@ -19,7 +16,7 @@ class Clock:
         # time_label #
         self.__time_label = self.create_time_label()  # label of 'Time: '
         # packing clock #
-        self.__clock_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)  # packing the clock
+        self.__clock_frame.pack(**kwargs)  # packing the clock
 
     def create_time_label(self):
         """
