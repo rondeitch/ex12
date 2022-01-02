@@ -49,6 +49,12 @@ STYLES = {
             "fg": COLORS["black"],
             "pady": 10
         },
+        "h4": {
+            "font": (FONTS["primary"], 14),
+            "bg": COLORS["white"],
+            "fg": COLORS["black"],
+            "pady": 10
+        },
     },
     "button": {
         "default": {
