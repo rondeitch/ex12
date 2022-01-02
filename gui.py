@@ -18,10 +18,24 @@ class Gui:
         self.__time_minute = time // 60
         self.__time_second = time % 60
         self.__clock = self.creat_clock(self.__time_minute, self.__time_second)
+        # score #
+        self.__game_score = 0
+        self.__score = self.create_score(self.__game_score)
+        # words that found #
+        self.__found_words_lst = []
+        self.__words_frame = tk.Frame(self.__root)
+        self.__words_found = self.create_words()
         # pack all together #
         self.__clock_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        self.__buttons_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.__buttons_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.__words_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
         # TODO: makes the dices also expandable.
+
+    def create_words(self):
+        words = tk.Label(self.__words_frame, text='Vocabulary: ', font=("Segue UI", 20),
+                         bg='grey', fg='Black', border=10)
+        words.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        return words
 
     def creat_clock(self, minute, second):
         """
@@ -32,21 +46,21 @@ class Gui:
         """
         if self.__time_second >= 10:
             if self.__time_minute >= 10:
-                clock = tk.Label(self.__clock_frame, text=str(minute) + ':' + str(second), font=("Segue UI", 30),
+                clock = tk.Label(self.__clock_frame, text=str(minute) + ':' + str(second), font=("Segue UI", 25),
                                  bg='green', fg='Black', border=10)
             else:
-                clock = tk.Label(self.__clock_frame, text="0" + str(minute) + ':' + str(second), font=("Segue UI", 30),
+                clock = tk.Label(self.__clock_frame, text="0" + str(minute) + ':' + str(second), font=("Segue UI", 25),
                                  bg='green', fg='Black', border=10)
         else:
             if self.__time_minute >= 10:
-                clock = tk.Label(self.__clock_frame, text=str(minute) + ':0' + str(second), font=("Segue UI", 30),
+                clock = tk.Label(self.__clock_frame, text=str(minute) + ':0' + str(second), font=("Segue UI", 25),
                                  bg='green', fg='Black', border=10)
             else:
-                clock = tk.Label(self.__clock_frame, text="0" + str(minute) + ':0' + str(second), font=("Segue UI", 30),
+                clock = tk.Label(self.__clock_frame, text="0" + str(minute) + ':0' + str(second), font=("Segue UI", 25),
                                  bg='green', fg='Black', border=10)
-        time_left = tk.Label(self.__clock_frame, text='Time:', font=("Segue UI", 30), bg='grey', fg='black',
+        time_left = tk.Label(self.__clock_frame, text='Time:', font=("Segue UI", 25), bg='grey', fg='black',
                              border=10)
-        time_left.pack(side=tk.LEFT, fill=tk.BOTH)
+        time_left.pack(side=tk.LEFT, fill=tk.BOTH)  # TODO: check if need - expand=True
         clock.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         return clock
 
@@ -75,6 +89,12 @@ class Gui:
             self.__time_minute -= 1
             self.__time_second = 59
             self.__clock.after(1000, self.clock_runner)
+
+    def create_score(self, score):
+        score = tk.Label(self.__clock_frame, text='score: ' + str(score), font=("Segue UI", 25),
+                         bg='orange', fg='Black', border=10)
+        score.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        return score
 
     def create_dices(self, board):
         """
@@ -130,6 +150,17 @@ class Gui:
         :return: int
         """
         return self.__time_minute * 60 + self.__time_second
+
+    # @score.setter
+    def set_score(self, points):
+        self.__game_score += points
+        self.__score['text'] = 'score: ' + str(self.__game_score)
+
+    def set_words(self, word):  # TODO: work on this func and check it
+        self.__found_words_lst.append(word)
+        words = self.__found_words_lst[:]
+        ', '.join(words)
+        self.__words_found['text'] = 'Vocabulary: ' + str(words)
 
     def main_loop(self):
         """
