@@ -10,7 +10,8 @@ COLORS = {
     "black": "#000000",
     "blue": "#489FB5",
     "navy": "#16697A",
-    "light_blue": "#8BD7D2"
+    "light_blue": "#8BD7D2",
+    "red": "red"  # TODO: choose exact color
 }
 
 STYLES = {
@@ -46,7 +47,7 @@ STYLES = {
             "font": (FONTS["primary"], 16),
             "bg": COLORS["white"],
             "fg": COLORS["black"],
-            "pady":10
+            "pady": 10
         },
     },
     "button": {
@@ -78,6 +79,18 @@ STYLES = {
         "on_click": {
             "bg": COLORS["blue"],
             "fg": COLORS["white"],
+        }
+    },
+    "clock": {
+        "default": {
+            "font": (FONTS["primary"], 25),
+            "bg": COLORS["white"],
+            "fg": COLORS["black"],
+            "borderwidth": 0.3
+        },
+        "before_end": {
+            "bg": COLORS["red"],
+            "fg": COLORS["black"],
         }
     }
 }
