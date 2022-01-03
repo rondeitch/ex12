@@ -4,7 +4,7 @@ from gui_style import *
 
 class Clock:
 
-    def __init__(self, parent, time, callback, **kwargs):
+    def __init__(self, parent, time, callback):
         # callback #
         self.__callback = callback  # input function.
         # clock #
@@ -15,6 +15,8 @@ class Clock:
         self.__clock = self.create_clock(self.__time_minute, self.__time_second)  # create the clock
         # time_label #
         self.__time_label = self.create_time_label()  # label of 'Time: '
+
+    def pack_clock(self, **kwargs):
         # packing clock #
         self.__clock_frame.pack(**kwargs)  # Packing the clock. Gets the **kwargs as params.
 
@@ -23,7 +25,7 @@ class Clock:
         Label of the text- 'Time: '
         :return: Tk.Label (time_label)
         """
-        time_label = tk.Label(self.__clock_frame, text='Time: ', **STYLES["clock"]["default"])
+        time_label = tk.Label(self.__clock_frame, text='TIME: ', **STYLES["clock"]["default"])
         time_label.pack(side=tk.LEFT, fill=tk.BOTH)
         return time_label
 
@@ -131,17 +133,17 @@ class Clock:
         self._clock_runner()
 
 
-# TODO: delete this at end (debug helper).
-def foo():
-    print('hello world')
-
-
-def main_root():
-    root = tk.Tk()
-    clo = Clock(root, 3, foo)
-    clo.start()
-    root.mainloop()
-
-
-if __name__ == '__main__':
-    main_root()
+# # TODO: delete this at end (debug helper).
+# def foo():
+#     print('hello world')
+#
+#
+# def main_root():
+#     root = tk.Tk()
+#     clo = Clock(root, 3, foo)
+#     clo.start()
+#     root.mainloop()
+#
+#
+# if __name__ == '__main__':
+#     main_root()

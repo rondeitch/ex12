@@ -4,7 +4,7 @@ from gui_style import *
 
 class GuessedWords:
 
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent):
         self.__frame = tk.Frame(parent)
         # the title of the frame- 'Guessed Words: '. #
         self.__frame_title = self._create_frame_title()
@@ -12,6 +12,8 @@ class GuessedWords:
         self.__words = []
         # label list #
         self.__labels = []
+
+    def pack_guessedwords(self, **kwargs):
         # packing the frame #
         self.__frame.pack(**kwargs)
 
@@ -20,7 +22,7 @@ class GuessedWords:
         Create the title - 'Guessed Words: '.
         :return: Tk.Label (title)
         """
-        title = tk.Label(self.__frame, text='Guessed Words: ', **STYLES['label']['h4'])
+        title = tk.Label(self.__frame, text='Guessed Words: ', **STYLES['label']['h2'])
         title.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
         return title
 
@@ -52,19 +54,19 @@ class GuessedWords:
         :param word: str
         :return: None
         """
-        if len(self.__labels) == 0:
-            word = tk.Label(self.__frame, text=str(word), **STYLES['label']['h4'])
-        else:  # if it's not the first word added, put a comma before the word.
-            word = tk.Label(self.__frame, text=", " + str(word), **STYLES['label']['h4'])
+        # if len(self.__labels) == 0:
+        #     word = tk.Label(self.__frame, text=str(word), **STYLES['label']['h4'])
+        # else:  # if it's not the first word added, put a comma before the word.
+        #     word = tk.Label(self.__frame, text=", " + str(word), **STYLES['label']['h4'])
+        word = tk.Label(self.__frame, text=str(word), **STYLES['label']['h4'])
         # TODO: maybe add a term of decline line if the row length if too long.
         word.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         self.__labels.append(word)
 
-
-# TODO: delete this at end (debug helper)
-if __name__ == '__main__':
-    root = tk.Tk()
-    wor = GuessedWords(root, fill=tk.BOTH, expand=1)
-    for i in range(10):
-        wor.add('word' + str(i))
-    root.mainloop()
+# # TODO: delete this at end (debug helper)
+# if __name__ == '__main__':
+#     root = tk.Tk()
+#     wor = GuessedWords(root, fill=tk.BOTH, expand=1)
+#     for i in range(10):
+#         wor.add('word' + str(i))
+#     root.mainloop()

@@ -1,5 +1,9 @@
 import tkinter as tk
 from gui_style import *
+from clock import Clock
+from guessedwords import GuessedWords
+
+
 # from boggle_screen import BoggleScreen
 
 
@@ -11,20 +15,31 @@ class BoggleGui:
         self.__root.configure(**STYLES["root"])
         self.__root.title('PLAY BOGGLE!')
         self.__root.minsize(MIN_WIDTH, MIN_HEIGHT)
+
         # frames
         self.__start_frame = tk.Frame(self.__root, **STYLES["frame"]["start"])
         self.__start_frame.pack(expand=1)
         self.__play_frame = tk.Frame(self.__root, **STYLES["frame"]["play"])
-        self.__game_info_frame = tk.Frame(self.__play_frame)
+
+        # clock and score frame #
+        self.__clock_n_score_frame = tk.Frame(self.__play_frame)
+
+        # guessedwords frame #
+        self.__guessedwords_frame = tk.Frame(self.__play_frame)
+
+        # self.__game_info_frame = tk.Frame(self.__play_frame)      TODO: check if need this
 
         self.__dices_frame = tk.Frame(self.__play_frame, **STYLES["frame"]["play"])
 
         self.__dices_list = []
-        self.__play_frame.pack(expand=1)
 
+        # guessedwords object #
+        self.__guessedwords = GuessedWords(self.__play_frame)
         # variables
         self.__current_path = []
 
+    def guessedwords_add_word(self, word):
+        self.__guessedwords.add(word)
 
     @staticmethod
     def _pack_elements(elements):
@@ -47,7 +62,7 @@ class BoggleGui:
                 path.append(dice[1])
         return path
 
-    def update_gui(self, game_state, score, board, guessed_words):
+    def update_gui(self, game_state, score, guessed_words):
         if game_state is True:
             pass
 
@@ -97,12 +112,12 @@ class BoggleGui:
 
         return cell_button, (row, col)
 
-    def create_game_info_frame(self):
-        info_label = tk.Label(self.__game_info_frame, text="Words:", **STYLES["label"]["h2"])
-        words_labels = tk.Label(self.__game_info_frame, text="Hello", **STYLES["label"]["h2"])
-        info_label.pack()
-        words_labels.pack()
-        self.__game_info_frame.pack(side=tk.RIGHT)
+    # def create_game_info_frame(self):     TODO: check if need this
+    #     info_label = tk.Label(self.__game_info_frame, text="Words:", **STYLES["label"]["h2"])
+    #     words_labels = tk.Label(self.__game_info_frame, text="Hello", **STYLES["label"]["h2"])
+    #     info_label.pack()
+    #     words_labels.pack()
+    #     self.__game_info_frame.pack(side=tk.RIGHT)
 
     def create_start_screen(self, msg, callback):
         self.__root.after(300)  # delay by 300ms
@@ -120,23 +135,50 @@ class BoggleGui:
         start_button.bind("<Button-1>", callback)  # bind callback to start button
         # self.__play_frame.pack()  # pack frame
 
-    def create_play_screen(self, callback, board, score):
+    # def create_play_screen(self, callback, board, score):
+    #     self.__root.after(300)
+    #     self.__start_frame.pack_forget()
+    #     play_frame_elements = list()
+    #     score_str = "SCORE: " + str(score)
+    #     play_frame_elements.append(tk.Label(self.__play_frame, text="BOGGLE", **STYLES["label"]["h1"]))
+    #     play_frame_elements.append(tk.Label(self.__play_frame, text=score_str, name="score", **STYLES["label"]["h2"]))
+    #     guess_button = tk.Button(self.__play_frame, text="Guess", **STYLES["button"]["default"])
+    #     self.create_dices(board)
+    #     play_frame_elements.append(self.__dices_frame)
+    #     play_frame_elements.append(guess_button)
+    #     self.__game_info_frame.pack()
+    #     play_frame_elements.append(self.__game_info_frame)
+    #     self._pack_elements(play_frame_elements)
+    #
+    #     guess_button.bind("<Button-1>", callback)
+    #     self.__play_frame.pack()
+
+    def create_play_screen(self, callback, board, score, time, clock_callback):
         self.__root.after(300)
         self.__start_frame.pack_forget()
-        play_frame_elements = list()
         score_str = "SCORE: " + str(score)
-        play_frame_elements.append(tk.Label(self.__play_frame, text="BOGGLE", **STYLES["label"]["h1"]))
-        play_frame_elements.append(tk.Label(self.__play_frame, text=score_str, name="score", **STYLES["label"]["h2"]))
+        boggle = tk.Label(self.__play_frame, text="~BOGGLE~", **STYLES["label"]["h1"])
+        score = tk.Label(self.__clock_n_score_frame, text=score_str, name="score", **STYLES["label"]["h2"])
+        clock = Clock(self.__clock_n_score_frame, time, clock_callback)
         guess_button = tk.Button(self.__play_frame, text="Guess", **STYLES["button"]["default"])
         self.create_dices(board)
-        play_frame_elements.append(self.__dices_frame)
-        play_frame_elements.append(guess_button)
-        self.__game_info_frame.pack()
-        play_frame_elements.append(self.__game_info_frame)
-        self._pack_elements(play_frame_elements)
+        self._pack_play_screen_elements(boggle, score, clock, guess_button, callback)
+        self.start_clock(clock)
 
+    def _pack_play_screen_elements(self, boggle, score, clock, guess_button, callback):
+        # self.__game_info_frame.pack()     # TODO: check if need this
+        boggle.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        clock.pack_clock(side=tk.LEFT, fill=tk.BOTH, expand=1)
+        score.pack(side=tk.RIGHT, fill=tk.BOTH, expand=1)
+        self.__clock_n_score_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        self.__guessedwords.pack_guessedwords(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
+        guess_button.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
+        self.__dices_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
         guess_button.bind("<Button-1>", callback)
-        self.__play_frame.pack()
+        self.__play_frame.pack(side=tk.LEFT, expand=1)
+
+    def start_clock(self, clock):
+        clock.start()
 
     def set_display(self):
         pass

@@ -80,22 +80,23 @@ class BoggleGame:
         return word_list
 
     def run_single_turn(self, path):
-        print("You guessed:", utils.path_to_str(self.board, path))
-        print(path, utils.is_valid_path(self.board, path, self.__word_list))
+        # print("You guessed:", utils.path_to_str(self.board, path))
+        # print(path, utils.is_valid_path(self.board, path, self.__word_list))
         if utils.is_valid_path(self.board, path, self.__word_list):
-            if not self.is_word_guessed(utils.path_to_str(self.board, path)):  # Check if word not already guessed
-                self.add_guess(utils.path_to_str(self.board, path))  # Add guess to score
+            word = utils.path_to_str(self.board, path)
+            if not self.is_word_guessed(word):  # Check if word not already guessed
+                self.add_guess(word)  # Add guess to score
                 self.reward_score(path)
-                # return random.choice(self.SUCCESS_TO_FIND_LIST)
-                print(random.choice(self.SUCCESS_TO_FIND_LIST))
+                return random.choice(self.SUCCESS_TO_FIND_LIST), word
+                # print(random.choice(self.SUCCESS_TO_FIND_LIST))
                 # TODO: change to the returns instead the prints in all this function
             else:
-                # return "Word already guessed"
-                print("Word already guessed")
+                return "Word already guessed", None
+                # print(word + " is already guessed")
         else:
-            # return "Path not valid"
-            print("Path not valid", )
-        print(self.print_state())
+            return "Path not valid", None
+            # print("Path not valid", )
+        # print(self.print_state())
 
     def start_game(self):
         # TODO: replace to randomize board
@@ -113,6 +114,13 @@ class BoggleGame:
         print("Game started")
         self.print_state()
         # return self.game_state()
+
+    def end_game(self):
+        self.__board = []
+        # self.__marked_board = []
+        self.__score = 0
+        self.__guessed_words = []
+        self.__game_state = False  # True if in middle of a game, False otherwise
 
     # TODO: These are debugging functions DELETE THEM:
     def print_state(self):

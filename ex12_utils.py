@@ -120,6 +120,13 @@ def _find_all_paths_helper(limit, search_type, board, words, all_paths, path, su
 
 
 def find_length_n_words(n, board, words):
+    """
+    Find paths for words in n length from the words arg.
+    :param n: int
+    :param board: List[List[str]]
+    :param words: iterable[str]
+    :return: List[List[Tuple[int, int]]] or empty list
+   """
     if n <= 0:
         return []
     all_paths = []
@@ -135,6 +142,13 @@ def find_length_n_words(n, board, words):
 
 
 def find_length_n_paths(n, board, words):
+    """
+    Find paths that are in n length for the words in words arg.
+    :param n: int
+    :param board: List[List[str]]
+    :param words: iterable[str]
+    :return: List[List[Tuple[int, int]]] or empty list
+    """
     if n <= 0:
         return []
     all_paths = []
@@ -149,4 +163,11 @@ def find_length_n_paths(n, board, words):
 
 
 def max_score_paths(board, words):
+    """
+    Return a list of paths that give the max score for the board and words given as input. There is just one path for
+    each word (the longest path).
+    :param board: List[List[str]]
+    :param words: iterable[str]
+    :return: List[List[Tuple[int, int]]] or empty list
+    """
     pass

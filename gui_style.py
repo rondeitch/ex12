@@ -89,10 +89,10 @@ STYLES = {
     },
     "clock": {
         "default": {
-            "font": (FONTS["primary"], 25),
+            "font": (FONTS["primary"], 18),
             "bg": COLORS["white"],
             "fg": COLORS["black"],
-            "borderwidth": 0.3
+            "pady": 10
         },
         "before_end": {
             "bg": COLORS["red"],
